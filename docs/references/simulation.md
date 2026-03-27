@@ -11,6 +11,7 @@
 - [NVIDIA Isaac Sim](https://developer.nvidia.com/isaac/sim) — 基於 Omniverse 的高保真模擬器（Apache 2.0）
 - [NVIDIA Isaac Lab](https://developer.nvidia.com/isaac-lab) — GPU 加速機器人學習框架（BSD-3-Clause）
 - [MuJoCo](https://mujoco.org/) — DeepMind 物理模擬器
+- [Newton](https://github.com/newton-physics/newton) — 基於 NVIDIA Warp 的 GPU 加速開源物理引擎，輕量、可微分、Python 原生，可能比 Isaac Sim 更適合本專案（Phase 7 時評估）
 
 ## 延伸資源
 
@@ -39,6 +40,7 @@
 
 ## 備註
 
-- Isaac Sim 僅支援 Linux（Ubuntu 22.04）。
+- Isaac Sim 僅支援 Linux（Ubuntu 22.04），安裝複雜、坑多。
 - MuJoCo 跨平台，適合快速原型。
-- 建議先 MuJoCo 再 Isaac Sim。
+- Newton 輕量且可微分，和 LeRobot Python 生態整合度高，但目前無 SO-101 模型需自建 URDF。
+- 建議 Phase 7 時評估：Newton（輕量可微分） vs MuJoCo（成熟穩定） vs Isaac Sim（高保真但重）。

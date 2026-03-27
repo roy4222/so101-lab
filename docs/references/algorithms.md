@@ -35,7 +35,12 @@
 
 - [Embodied-AI-Guide 演算法章節](https://github.com/TianxingChen/Embodied-AI-Guide) — 具身智慧演算法的系統性整理
 
+### 訓練自動化
+
+- [autoresearch (Karpathy)](https://github.com/karpathy/autoresearch) — AI agent 自動改 code → 跑實驗 → 評估 → 迭代。原本針對 LLM 訓練，但模式可搬到 robotics policy 訓練（Phase 4 時評估）
+
 ## 備註
 
 - 建議從 ACT 開始，最成熟且社群經驗最多。
 - eta_0.1 發現 ResNet18 + 獨立編碼器 > ResNet34。
+- Phase 4 時可考慮用 autoresearch 模式自動化超參數搜索，讓 5x RTX 8000 跑整晚。
