@@ -21,14 +21,21 @@
 
 ### Step 1 — 本地推論測試
 
-載入 checkpoint 控制 Follower 執行 pick & place：
+載入 checkpoint 控制 Follower 執行 pick & place。LeRobot 的推論是透過 `lerobot-record` 加上 `--control.policy.path` 參數來執行：
 
 ```bash
-lerobot-infer \
-  --policy.path=path/to/checkpoint \
-  --robot.type=so101_follower --robot.port=/dev/ttyXXX \
-  --robot.cameras.front.type=realsense
+lerobot-record \
+  --robot.type=so101_follower --robot.port=/dev/ttyXXX --robot.id=my_follower \
+  --robot.cameras.front.type=realsense \
+  --robot.cameras.front.fps=30 \
+  --robot.cameras.front.width=640 \
+  --robot.cameras.front.height=480 \
+  --control.policy.path=path/to/checkpoint \
+  --dataset.repo_id=<your-username>/so101_eval_v1 \
+  --dataset.num_episodes=10
 ```
+
+> **說明**：LeRobot 目前沒有獨立的 `lerobot-infer` 指令，推論是透過 record 路徑搭配 policy checkpoint 完成。這同時會錄下推論過程的資料，方便後續分析。
 
 測試 10+ 次，記錄每次成功 / 失敗及失敗原因。
 
@@ -43,15 +50,20 @@ uv pip install "lerobot[async]"
 - **PolicyServer**（GPU 機器）：負責模型推論
 - **RobotClient**（機器人端）：負責感測器讀取和馬達控制
 
+非同步推論將推論和執行分離到不同程序（可在不同機器上）：
+
 ```bash
-# GPU 機器上啟動 PolicyServer
-lerobot-policy-server --policy.path=path/to/checkpoint
+# GPU 機器上啟動 PolicyServer（參考 LeRobot async 文件）
+python -m lerobot.scripts.server.policy_server \
+  --policy.path=path/to/checkpoint
 
 # 機器人端啟動 RobotClient
-lerobot-robot-client \
-  --robot.type=so101_follower --robot.port=/dev/ttyXXX \
-  --server.host=<GPU_IP> --server.port=<PORT>
+python -m lerobot.scripts.server.robot_client \
+  --robot.type=so101_follower --robot.port=/dev/ttyXXX --robot.id=my_follower \
+  --robot.cameras.front.type=realsense
 ```
+
+> **注意**：非同步推論的具體指令格式可能隨 LeRobot 版本更新而變化，執行前請確認 [LeRobot async 文件](https://huggingface.co/docs/lerobot) 的最新版本。
 
 ### Step 3 — Jetson 部署
 

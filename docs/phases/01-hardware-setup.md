@@ -22,14 +22,25 @@
 
 ### Step 1 — 環境安裝
 
+建議從 source 安裝，確保取得最新版本且可安裝 Feetech extra：
+
 ```bash
+# 建立專案環境
 uv init
 uv venv
 source .venv/bin/activate
-uv pip install lerobot
-uv pip install "lerobot[feetech]"
+
+# 從 source 安裝 LeRobot（官方建議方式）
+git clone https://github.com/huggingface/lerobot.git
+cd lerobot
+uv pip install -e ".[feetech]"
+cd ..
+
+# 驗證安裝
 lerobot-info
 ```
+
+> **為什麼從 source？** LeRobot 更新頻繁，PyPI 版本可能落後。從 source 安裝確保取得最新的 SO-101 支援，且 `.[feetech]` extra 需要 editable install。詳見 [LeRobot 安裝指南](https://huggingface.co/docs/lerobot/main/en/installation)。
 
 ### Step 2 — 組裝機械臂
 
@@ -69,9 +80,11 @@ lerobot-setup-motors --teleop.type=so101_leader --teleop.port=/dev/ttyYYY
 分別對 Follower 和 Leader 執行校正：
 
 ```bash
-lerobot-calibrate --robot.type=so101_follower --robot.port=/dev/ttyXXX
-lerobot-calibrate --teleop.type=so101_leader --teleop.port=/dev/ttyYYY
+lerobot-calibrate --robot.type=so101_follower --robot.port=/dev/ttyXXX --robot.id=my_follower
+lerobot-calibrate --teleop.type=so101_leader --teleop.port=/dev/ttyYYY --teleop.id=my_leader
 ```
+
+> **重要**：`--robot.id` 和 `--teleop.id` 決定校正檔的儲存路徑，後續的遙操作、錄製、推論指令都必須使用相同的 ID，否則會找不到校正檔或校正不匹配。
 
 ## 5. 驗證方式
 

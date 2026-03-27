@@ -35,8 +35,8 @@ lerobot-find-cameras realsense
 
 ```bash
 lerobot-teleoperate \
-  --robot.type=so101_follower --robot.port=/dev/ttyXXX \
-  --teleop.type=so101_leader --teleop.port=/dev/ttyYYY
+  --robot.type=so101_follower --robot.port=/dev/ttyXXX --robot.id=my_follower \
+  --teleop.type=so101_leader --teleop.port=/dev/ttyYYY --teleop.id=my_leader
 ```
 
 驗證：手動操作 Leader 臂，Follower 臂應即時鏡像，動作連續且可控。
@@ -51,8 +51,8 @@ lerobot-teleoperate \
 
 ```bash
 lerobot-teleoperate \
-  --robot.type=so101_follower --robot.port=/dev/ttyXXX \
-  --teleop.type=so101_leader --teleop.port=/dev/ttyYYY \
+  --robot.type=so101_follower --robot.port=/dev/ttyXXX --robot.id=my_follower \
+  --teleop.type=so101_leader --teleop.port=/dev/ttyYYY --teleop.id=my_leader \
   --robot.cameras.front.type=realsense \
   --robot.cameras.front.fps=30 \
   --robot.cameras.front.width=640 \

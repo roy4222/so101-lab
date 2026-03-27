@@ -26,7 +26,7 @@
 
 - **任務名**：`pick_and_place_cube`
 - **Repo ID**：`<your-username>/so101_pick_and_place_cube`
-- **攝影機數量**：至少 2 個視角
+- **攝影機數量**：1 台 RealSense D435（如有第二台 USB 攝影機可加入，但非必要）
 - **FPS**：30
 - **每回合長度**：10-20 秒
 
@@ -34,8 +34,8 @@
 
 ```bash
 lerobot-record \
-  --robot.type=so101_follower --robot.port=/dev/ttyXXX \
-  --teleop.type=so101_leader --teleop.port=/dev/ttyYYY \
+  --robot.type=so101_follower --robot.port=/dev/ttyXXX --robot.id=my_follower \
+  --teleop.type=so101_leader --teleop.port=/dev/ttyYYY --teleop.id=my_leader \
   --robot.cameras.front.type=realsense \
   --robot.cameras.front.fps=30 \
   --robot.cameras.front.width=640 \
@@ -96,7 +96,7 @@ lerobot-replay --dataset.repo_id=<your-username>/so101_pick_and_place_cube --epi
 
 - [ ] 50+ 回合有效示範
 - [ ] 已上傳 HuggingFace Hub 並有版本號
-- [ ] 至少 2 個攝影機視角
+- [ ] 至少 1 個攝影機視角（RealSense D435），如有第二台可加入
 - [ ] 錄製指令可重現
 - [ ] 品質目視檢查通過
 
