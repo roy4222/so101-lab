@@ -8,10 +8,10 @@
 
 ## 核心資源（必讀）
 
+- [Seeed Projects LeRobot Fork](https://github.com/Seeed-Projects/lerobot.git) — **本專案使用的穩定版**，經 Seeed 驗證
 - [LeRobot 官方文件](https://huggingface.co/docs/lerobot/index) — 完整的 LeRobot 使用說明與 API 文件
-- [LeRobot GitHub](https://github.com/huggingface/lerobot) — LeRobot 原始碼與 issue 追蹤
+- [LeRobot GitHub](https://github.com/huggingface/lerobot) — LeRobot 原始碼與 issue 追蹤（官方最新版，可能有 breaking change）
 - [XLeRobot](https://github.com/Vector-Wangel/XLeRobot) — 擴展版 LeRobot，支援雙臂與移動平台
-- [uv](https://docs.astral.sh/uv/) — 快速 Python 套件管理與虛擬環境工具
 
 ## 延伸資源
 
@@ -40,7 +40,10 @@
 - pyrealsense2 — Intel RealSense 的 Python 綁定
 - OpenCV — 電腦視覺基礎函式庫
 
-## 備註
+## 環境管理
 
-- 統一使用 uv 管理 Python 環境。
-- LeRobot 版本更新頻繁，注意 changelog。
+- **Jetson**：使用 Miniconda（conda 環境 `lerobot`，Python 3.10）
+- **WSL2 開發機**：可用 uv 或 conda
+- LeRobot 版本更新頻繁，本專案釘選 Seeed Fork 以確保穩定
+- Jetson JetPack 6.0/6.1（暫不支援 6.2）
+- PyTorch GPU 版需手動安裝（pip install lerobot 會覆蓋成 CPU 版）

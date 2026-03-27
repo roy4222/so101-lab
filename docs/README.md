@@ -8,9 +8,9 @@
 
 | 項目 | 內容 |
 |------|------|
-| 現在做什麼 | Phase 1 — 硬體組裝與校正 |
-| 下一步 | Phase 2 — 遙操作 + RealSense D435 設定 |
-| 目前 Blocker | 無 |
+| 現在做什麼 | Phase 1 — 硬體組裝（3D 列印件 + 馬達 + 接線完成，電源待焊接） |
+| 下一步 | 焊接電源 → 馬達 ID 設定 → 校正 → Phase 2 遙操作 |
+| 目前 Blocker | 電源接頭待焊接 |
 
 ---
 
@@ -18,7 +18,7 @@
 
 | 設備 | 規格 | 用途 |
 |------|------|------|
-| SO-101 機械臂 x2 | 6-DOF, Feetech STS3215 | Leader + Follower（之後改雙臂） |
+| SO-101 機械臂 x2 | 6-DOF, Feetech STS3215（Seeed Studio 套件版） | Leader + Follower（之後改雙臂） |
 | Intel RealSense D435 | 彩色 + 深度攝影機 | 視覺感知 |
 | NVIDIA Jetson Orin Nano | 8GB, SUPER Developer Kit | 邊緣推論 |
 | 訓練工作站 | 5x RTX 8000 (240GB), 2x Xeon Gold 6248R, 754GB RAM | 模型訓練 |
@@ -49,4 +49,4 @@
 
 ## 最新開發日誌
 
-> 尚未開始記錄，第一篇日誌將在 Phase 1 啟動後撰寫。
+- [2026-03-27 — Phase 1 啟動：組裝進度與開發架構決策](journal/2026-03-27-phase01-kickoff.md)

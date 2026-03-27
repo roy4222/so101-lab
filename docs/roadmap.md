@@ -16,7 +16,7 @@
 
 | Phase | 名稱 | 優先級 | 前置依賴 | 預期產出 | 狀態 |
 |-------|------|--------|---------|---------|------|
-| 01 | [硬體組裝](phases/01-hardware-setup.md) | P0 | 無 | 已校正的雙臂系統 | `not-started` |
+| 01 | [硬體組裝](phases/01-hardware-setup.md) | P0 | 無 | 已校正的雙臂系統 | `in-progress` |
 | 02 | [遙操作](phases/02-teleoperation.md) | P0 | Phase 01 | Leader-Follower 即時控制 + RealSense 串流 | `not-started` |
 | 03 | [資料收集](phases/03-data-collection.md) | P0 | Phase 02 | 50+ 回合 pick & place 資料集 | `not-started` |
 | 04 | [訓練](phases/04-training.md) | P1 | Phase 03 | 訓練好的 ACT checkpoint | `not-started` |
