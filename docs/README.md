@@ -8,9 +8,9 @@
 
 | 項目 | 內容 |
 |------|------|
-| 現在做什麼 | Phase 1 — 硬體組裝（3D 列印件 + 馬達 + 接線完成，電源待焊接） |
-| 下一步 | 焊接電源 → 馬達 ID 設定 → 校正 → Phase 2 遙操作 |
-| 目前 Blocker | 電源接頭待焊接 |
+| 現在做什麼 | Phase 1 — 硬體組裝（3D 列印件 + 馬達 + 接線 + 電源完成，Pi 5 已上線） |
+| 下一步 | 裝 LeRobot 環境 → 馬達 ID 設定 → 校正 → Phase 2 遙操作 |
+| 目前 Blocker | 無 |
 
 ---
 
@@ -20,7 +20,7 @@
 |------|------|------|
 | SO-101 機械臂 x2 | 6-DOF, Feetech STS3215（Seeed Studio 套件版） | Leader + Follower（之後改雙臂） |
 | Intel RealSense D435 | 彩色 + 深度攝影機 | 視覺感知 |
-| NVIDIA Jetson Orin Nano | 8GB, SUPER Developer Kit | 邊緣推論 |
+| Raspberry Pi 5 | 8GB, NCC 認證, Debian 13 (Trixie) | 主執行機（LeRobot、校正、遙操作、錄資料） |
 | 訓練工作站 | 5x RTX 8000 (240GB), 2x Xeon Gold 6248R, 754GB RAM | 模型訓練 |
 
 ---

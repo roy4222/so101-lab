@@ -18,7 +18,7 @@
 | 02 遙操作 | Leader-Follower 即時控制、RealSense D435 彩色+深度串流 |
 | 03 資料收集 | LeRobotDataset 格式、資料品質管理、HuggingFace Hub 上傳 |
 | 04 訓練 | ACT / Diffusion Policy 訓練、多 GPU 加速、實驗追蹤 |
-| 05 部署 | 本地推論、Jetson 邊緣部署、非同步 PolicyServer/RobotClient |
+| 05 部署 | 本地推論、Pi 5 邊緣部署、非同步 PolicyServer/RobotClient |
 
 ### Phase 6：雙臂協調
 
@@ -74,7 +74,7 @@ Phase 1-5                Phase 6                   Phase 7-8
 │  SO-101     │     │  雙臂桌面版      │     │  XLeRobot 移動機器人  │
 │  單臂       │ ──→ │  2x SO-101      │ ──→ │  雙臂 + 輪式底盤      │
 │  Leader +   │     │  雙 Follower    │     │  + 導航 + VLA         │
-│  Follower   │     │  + RealSense    │     │  + Jetson 邊緣推論    │
+│  Follower   │     │  + RealSense    │     │  + Pi 5 邊緣控制      │
 └─────────────┘     └─────────────────┘     └──────────────────────┘
 ```
 
@@ -88,5 +88,5 @@ Phase 1-5                Phase 6                   Phase 7-8
 | SO-101 Follower 臂 | 任務執行 | Phase 1 |
 | Intel RealSense D435 | 彩色 + 深度感知 | Phase 2 |
 | 5x Quadro RTX 8000 (240GB) | 模型訓練 | Phase 4 |
-| NVIDIA Jetson Orin Nano 8GB | 邊緣推論 | Phase 5 |
+| Raspberry Pi 5 8GB | 主執行機（遙操作、校正、錄資料、邊緣控制） | Phase 1 |
 | IKEA RASKOG 推車 + 輪組 | 移動底盤 | Phase 8 |
