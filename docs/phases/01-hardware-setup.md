@@ -148,6 +148,41 @@ lerobot-setup-motors \
 
 依腳本提示，從 gripper (ID 6) 到 shoulder_pan (ID 1) 逐一接上單顆馬達並按 Enter。完成後再將 6 顆馬達串接回驅動板。
 
+> ⚠️ **重要**：每次提示出現後**一定要真的物理換馬達再按 Enter**。腳本無法偵測你是否真的換了馬達，只會按順序寫入 ID。如果每次都按 Enter 但馬達沒換，6 次 ID 會全部寫在同一顆馬達上（最後那顆變 ID=1），其他 5 顆還是出廠 ID，看起來成功其實失敗。
+>
+> **驗收方式**：下方 Step 2.5 的 bus 掃描是唯一可靠的驗證。
+
+### Step 2.5 — 驗證馬達 ID 綁定（必做）
+
+完成 Step 2 後，把 6 顆馬達用 3-pin 線**串聯回去**，跑以下掃描腳本確認 ID 1-6 都在 bus 上：
+
+```bash
+cd ~/lerobot && source .venv/bin/activate
+
+python -c "
+import scservo_sdk as scs
+port = scs.PortHandler('/dev/ttyACM0')
+port.openPort(); port.setBaudRate(1_000_000)
+packet = scs.PacketHandler(0)
+found = []
+for mid in range(1, 11):
+    model, comm, _ = packet.ping(port, mid)
+    if comm == scs.COMM_SUCCESS:
+        found.append(mid)
+        print(f'ID {mid}: model={model}')
+print(f'Total: {found}')
+port.closePort()
+"
+```
+
+**預期輸出**：`Total: [1, 2, 3, 4, 5, 6]`
+
+- 如果只看到 4 顆（通常是 1-4，缺 5-6）→ 串聯線在某兩顆之間斷了，通常是 wrist_flex ↔ wrist_roll 那條
+- 如果只看到 1 顆 ID=1 → Step 2 你沒有物理換馬達，要重跑
+- 如果看到 6 顆但 IDs 不連續 → 腳本中途有斷過，重跑
+
+Leader 臂重複一次（USB port 可能變 `/dev/ttyACM0` 或 `/dev/ttyACM1`，視插拔順序）。
+
 ### Step 3 — 組裝機械臂
 
 按 [Seeed Wiki 組裝教程](https://wiki.seeedstudio.com/cn/lerobot_so100m/#%E7%BB%84%E8%A3%85%E6%95%99%E7%A8%8B) 的圖片步驟進行：
@@ -240,7 +275,8 @@ Raspberry Pi 5 (192.168.0.22)       → LeRobot 執行、接手臂、接相機
 
 ## 7. 成功標準
 
-- [ ] 12 顆馬達 ID 設定完成
+- [x] 12 顆馬達 ID 設定完成（2026-04-05）
+- [x] 雙臂 bus 掃描驗證通過（Follower + Leader 各 6 顆回應，2026-04-05）
 - [ ] `lerobot-calibrate` 雙臂通過
 - [ ] 6 個關節可獨立控制
 - [ ] 校正檔已備份
@@ -263,6 +299,12 @@ Raspberry Pi 5 (192.168.0.22)       → LeRobot 執行、接手臂、接相機
 - **先裝馬達再接線是可行的**，但空間會比較小。建議用鑷子或尖嘴鉗輔助插 3-pin 接頭。官方建議「先插線再裝馬達」，但不是硬性要求。
 - **Seeed Studio 套件版差異**：驅動板和電源配置可能和 HuggingFace 官方教學不同，接線請對照 [Seeed Wiki](https://wiki.seeedstudio.com/cn/lerobot_so100m/) 而非官方 LeRobot docs。
 - **電源不能只靠 USB-C**：USB-C 只傳資料，馬達需要獨立 DC 電源（標準版 5V，Pro 版 Follower 12V / Leader 5V）。
+
+#### 馬達 ID 綁定踩坑（2026-04-05 實作記錄）
+
+- **按 Enter 不換馬達的烏龍**：`lerobot-setup-motors` 第一次跑只花 29 秒就印完 6 個「success」訊息——看起來成功，實際是同一顆馬達被覆蓋寫入 6 次 ID，最後變 ID=1，其他 5 顆還是出廠狀態。**教訓**：腳本無法偵測馬達是否物理更換，每個提示一定要真的拔上一顆、插下一顆、才按 Enter。第二次跑正確流程花了 3m45s（Follower）和 12m7s（Leader），才是正常時間。
+- **掃描驗證的重要性**：用 `scservo_sdk.PacketHandler.ping()` 對 ID 1-10 掃描是最快抓出綁定問題的方法。沒掃就進校正會在奇怪的地方失敗。本文件 Step 2.5 有完整腳本。
+- **3-pin 串聯線鬆脫 = bus 上「後面所有」馬達消失**：Leader 第一次掃只找到 1-4 號，缺 5、6。**不是**馬達壞掉，而是 wrist_flex (4) → wrist_roll (5) 的串聯線訊號針沒插到底。訊號線一旦斷，daisy chain 上**所有在斷點後面的馬達**都會從 bus 消失。但**電源針獨立**，所以馬達 LED 還會亮——不能用 LED 來判斷 bus 是否通。重插後 6 顆全數回歸。
 
 #### LeRobot 執行時錯誤
 

@@ -1,4 +1,4 @@
-# 2026-04-05 — Pi 5 上線 + LeRobot 環境完整安裝
+# 2026-04-05 — Pi 5 上線 + LeRobot 環境 + 12 顆馬達 ID 綁定
 
 > Phase: 01 | Tags: #hardware, #setup, #debug
 
@@ -70,19 +70,38 @@
 - 其他套件其實有裝成功，但 exit code 非 0 讓自動化腳本誤判
 - **結論**：遇到 apt 錯誤要看實際 trigger，不是每個 error 都代表套件沒裝
 
+## 傍晚追加：12 顆馬達 ID 全部綁定完成
+
+### 已完成
+
+- **Follower 臂 6 顆 ID 綁定** (17:44 接上驅動板 → 19:57 綁定完成)
+  - 第一次嘗試只花 29 秒就「成功」—— 實際是同一顆馬達被寫 6 次 ID 的烏龍
+  - 第二次正確跑 3m45s，ID 1-6 全綁對
+- **Follower bus 掃描驗證** ✅ `[1, 2, 3, 4, 5, 6]` 全部 model=777, err=0
+- **Follower 實體運動測試**：6 顆馬達各動 ±30 steps (~2.6°)，確認能收指令並實際轉動
+  - ID 1, 2, 4, 6 動作乾淨
+  - ID 3, 5 顯示大的 raw delta 是**未校正狀態下的 multi-turn 模式副作用**，不是馬達問題
+  - 結論：Follower 臂硬體健康
+- **Leader 臂 6 顆 ID 綁定** (12m7s，比 Follower 慢，因為 3 種不同減速比的馬達要小心放位置)
+- **Leader bus 掃描**：第一次只找到 1-4（wrist_flex → wrist_roll 串聯線鬆脫），重插後 ✅ `[1, 2, 3, 4, 5, 6]` 全員到齊
+
+### 關鍵教訓
+
+1. **`lerobot-setup-motors` 沒有防呆** — 腳本無法偵測你是否真的換了馬達，按 Enter 它就寫。**每個提示一定要物理換馬達再按 Enter**。我第一次跑時誤以為腳本會自動跳下一顆，結果 29 秒跑完 6 個提示，同一顆馬達 ID 被覆蓋 6 次變 ID=1。
+2. **Bus 掃描是最快的 sanity check** — `scservo_sdk.ping()` 對 ID 1-10 掃描 <1 秒，能抓出 ID 綁定錯誤、串聯線斷等問題。沒掃就進校正會在奇怪的地方失敗。
+3. **LED 亮 ≠ bus 通** — 3-pin 線的電源和訊號腳獨立，只有電源針接觸良好時 LED 還是會亮，但訊號針斷的話 bus 看不到該馬達（以及後面所有馬達）。**故障排除時不能用 LED 判斷 bus 狀態**。
+4. **串聯斷點 = 後方全滅** — daisy chain 上某個接頭訊號斷，**斷點後面所有馬達**都會從 bus 消失，不只斷點那一顆。檢查順序：從斷點前最後一顆（有回應）到斷點後第一顆（無回應）之間的線材。
+
 ## 下週計畫
 
-1. **接驅動板驗證 USB**
-   - `lerobot-find-port` 能看到 `/dev/ttyACM0`
-   - `lsusb` 確認 vendor/product ID
-2. **綁 12 顆馬達 ID**（Leader L1-L6 + Follower F1-F6）
-   - 一次一顆按 Seeed Wiki 流程
-   - 注意馬達型號對照表，Leader 有 3 種減速比
-3. **兩臂組裝最後確認 + 校正**
-   - `lerobot-calibrate` 雙臂通過
-   - 手動測試 6 關節獨立動作
-4. **Phase 2 遙操作預備**
+1. **`lerobot-calibrate` 雙臂校正** ← Phase 01 最後一步
+   - Follower + Leader 各約 5-10 分鐘
+   - 手動把每個關節在完整範圍內移動一次
+   - 產出 `~/.cache/huggingface/lerobot/calibration/*.json`
+2. **手動測試 6 關節獨立控制**
+3. **Phase 2 遙操作預備**
    - `lerobot-teleoperate` 不含相機 dry-run
+   - 驗證 Leader 手動動作 → Follower 即時跟隨
 
 ## 相關資源
 
